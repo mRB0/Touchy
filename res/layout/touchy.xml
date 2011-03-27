@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res/com.snobwall.touchy"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" android:orientation="vertical">
+    
+    <FrameLayout android:layout_width="fill_parent" android:id="@+id/frameLayout1" android:layout_height="fill_parent">
+        <com.snobwall.touchy.TouchyView app:color="#800000" app:text="outermost" app:textColor="#ffffff" android:layout_height="fill_parent" android:layout_width="fill_parent" android:id="@+id/TouchyView1">
+ 	        <com.snobwall.touchy.TouchyView app:color="#008000" app:text="level1" app:textColor="#ffff00" android:layout_height="fill_parent" android:layout_width="fill_parent" android:id="@+id/TouchyView2">
+	            <com.snobwall.touchy.TouchyView app:color="#004040" app:text="level2" app:textColor="#ff8080" android:layout_height="fill_parent" android:layout_width="fill_parent" android:id="@+id/TouchyView3">
+	            </com.snobwall.touchy.TouchyView>
+	        </com.snobwall.touchy.TouchyView>
+        </com.snobwall.touchy.TouchyView>
+    </FrameLayout>
+    
+</LinearLayout>
