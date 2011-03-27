@@ -2,6 +2,7 @@ package com.snobwall.touchy;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,6 +28,12 @@ public class TouchyActivity extends Activity {
                     .setTitle("Click listener")
                     .setMessage("I received a click from TouchyView1.")
                     .create().show();
+                
+                // Grab TouchyView2 and make it a bit bigger.
+                TouchyView who = (TouchyView)findViewById(R.id.TouchyView2);
+                Paint textStyle = who.getTextPaintStyle();
+                textStyle.setTextSize(textStyle.getTextSize() * 1.15f);
+                who.setTextPaintStyle(textStyle);
             }
             
         });

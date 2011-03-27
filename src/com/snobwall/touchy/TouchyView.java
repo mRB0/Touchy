@@ -155,7 +155,7 @@ public class TouchyView extends ViewGroup {
     }
 
     public Paint getPaintStyle() {
-        return mPaintStyle;
+        return new Paint(mPaintStyle);
     }
 
     public void setPaintStyle(Paint paintStyle) {
@@ -164,7 +164,7 @@ public class TouchyView extends ViewGroup {
     }
     
     public Paint getTextPaintStyle() {
-        return mTextPaintStyle;
+        return new Paint(mTextPaintStyle);
     }
 
     public void setTextPaintStyle(Paint mTextPaintStyle) {
