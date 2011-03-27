@@ -15,6 +15,9 @@ public class TouchyActivity extends Activity {
         
         View v;
         
+        // Put a click listener on TouchyView1 (outermost). Sometimes it'll call this,
+        // which it has to do explicitly in onTouchEvent (at least, if it has
+        // overridden onTouchEvent).
         v = findViewById(R.id.TouchyView1);
         v.setOnClickListener(new OnClickListener() {
 
@@ -22,12 +25,15 @@ public class TouchyActivity extends Activity {
             public void onClick(View arg0) {
                 new AlertDialog.Builder(TouchyActivity.this)
                     .setTitle("Click listener")
-                    .setMessage("I got a lost click from TouchyView1.")
+                    .setMessage("I received a click from TouchyView1.")
                     .create().show();
             }
             
         });
 
+        // Put a click listener on the frame layout holding everything.
+        // This'll get called if the click isn't handled by anything
+        // in the view hierarchy that's also involved with the touch.
         v = findViewById(R.id.frameLayout1);
         v.setOnClickListener(new OnClickListener() {
 
