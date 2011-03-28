@@ -47,14 +47,14 @@ public class TouchyView extends ViewGroup {
         CharSequence s = arr.getString(R.styleable.TouchyView_text);
         if (s != null) {
             mText = s.toString();
-            Log.d("TouchyView", String.format("Looks like my text is %s!", s));
+            log(String.format("Looks like my text is %s!", s));
         } else {
             mText = "";
         }
         
         mPaintStyle = new Paint();
         int paintColor = arr.getColor(R.styleable.TouchyView_color, Color.rgb(255, 255, 255));
-        Log.d("TouchyView", String.format("Paint color is ARGB=%d, %d, %d, %d",
+        log(String.format("Paint color is ARGB=%d, %d, %d, %d",
                 Color.alpha(paintColor),
                 Color.red(paintColor),
                 Color.green(paintColor),
@@ -71,6 +71,10 @@ public class TouchyView extends ViewGroup {
         mTextPaintStyle.setColor(paintColor);
     }
     
+    public void log(String s) {
+        Log.d("TouchyView", String.format("(%s) %s", mText, s));
+    }
+    
     /**
      * Perform layout of children.
      * 
@@ -81,7 +85,7 @@ public class TouchyView extends ViewGroup {
      */
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        Log.d("TouchyView", String.format("I seem to have %d children.", getChildCount()));
+        log(String.format("I seem to have %d children.", getChildCount()));
         
         int top = (int)Math.ceil(mTextPaintStyle.getFontSpacing() * 1.5);
         
@@ -135,7 +139,7 @@ public class TouchyView extends ViewGroup {
         }
         childHeightMeasureSpec = MeasureSpec.makeMeasureSpec(height - top, MeasureSpec.AT_MOST);
         
-        Log.d("TouchyView", String.format("I seem to be of size %dx%d", width, height));
+        log(String.format("I seem to be of size %dx%d", width, height));
         
         setMeasuredDimension(width, height);
         measureChildren(childWidthMeasureSpec, childHeightMeasureSpec);
@@ -178,11 +182,32 @@ public class TouchyView extends ViewGroup {
     }
     
     /**
-     * TODO: Let's intercept a touch event sometime.
+     * Let's intercept a touch-down event sometimes.
+     * 
+     * If we return true here, it means we want to intercept the touch event.
+     * Our onTouchEvent will then get called, too.
+     * 
+     * If a child was already in the middle of handling some touch events (like
+     * if it had handled an onTouchEvent ACTION_DOWN, and was following the
+     * gesture or something) then returning true here on a future event
+     * will cause the child to get an onTouchEvent ACTION_CANCEL.
+     *    Maybe.
+     * Verify that. I could be misinterpreting the docs. 
      */
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        return super.onInterceptTouchEvent(ev);
+        Random rnd = new Random();
+        
+        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+            if (rnd.nextInt(4) == 0) {
+                log("I'm going to steal a MotionEvent from my child.");
+                return true;
+            } else {
+                log("I COULD steal a MotionEvent, but I'd prefer not to.");
+                return false;
+            }
+        }
+        return false;
     }
 
     /**
@@ -202,6 +227,10 @@ public class TouchyView extends ViewGroup {
      */
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_CANCEL) {
+            log("Whoa! A touch event was just cancelled.");
+        }
+        
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             Random rnd = new Random();
             int handle = rnd.nextInt(3);
@@ -219,7 +248,7 @@ public class TouchyView extends ViewGroup {
                 break;
             }
             
-            Log.d("TouchyView", String.format("This is %s. I got a touch, and I'm going to %s.", mText, action));
+            log(String.format("I got a touch, and I'm going to %s.", action));
             
             if (handle == 1) {
                 new AlertDialog.Builder(getContext())
@@ -232,7 +261,7 @@ public class TouchyView extends ViewGroup {
             
             return (handle != 0);
         } else { 
-            Log.d("TouchyView", String.format("This is %s, and I got a non-down event. I hate those!", mText));
+            log("I got a non-down event. I hate those!");
             
             return false; 
         }
