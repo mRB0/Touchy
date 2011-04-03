@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="TouchyView_defaults">
+        <item name="com.snobwall.touchy:color">#FF6103</item>   
+        <item name="com.snobwall.touchy:text">(default text)</item>
+        <item name="com.snobwall.touchy:textColor">#880000</item>   
+    </style>
+</resources>

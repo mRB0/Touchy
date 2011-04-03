@@ -20,40 +20,55 @@ public class TouchyView extends ViewGroup {
 
     public TouchyView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        setup(context, attrs);
+        setup(attrs);
     }
 
     public TouchyView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        setup(context, attrs);
+        setup(attrs);
     }
 
     public TouchyView(Context context) {
         super(context);
-        setup(context, null);
+        setup(null);
     }
     
     /** 
-     * Call from constructor.
      * Initialize some of the custom values from XML.
+     * Call from constructor.
+     * 
+     * There are some XML-provided attributes that we care about.
      * We look at "text", which we will display,
      * and "color", which we draw in the background,
      * and "textColor", which colours the text that we draw.
+     * 
+     * Defaults for these attributes are stored in attr_defaults.xml,
+     * and this is referenced by the call to
+     * (Context).obtainStyledAttributes.
+     * 
+     * @param attrs The AttributeSet provided at construction of this view,
+     *              if any. May be null.
      */
-    protected void setup(Context context, AttributeSet attrs) {
+    protected void setup(AttributeSet attrs) {
         setWillNotDraw(false);
         
-        TypedArray arr = context.obtainStyledAttributes(attrs, R.styleable.TouchyView);
+        TypedArray arr = getContext().obtainStyledAttributes(attrs, R.styleable.TouchyView, 0, R.style.TouchyView_defaults);
+        
         CharSequence s = arr.getString(R.styleable.TouchyView_text);
         if (s != null) {
             mText = s.toString();
             log(String.format("Looks like my text is %s!", s));
         } else {
+            // Note: Shouldn't reach, as we should be loading a default
+            // text from attr_defaults.xml / R.style.TouchyView_defaults if
+            // none is specified in the layout.
             mText = "";
         }
         
+        // Also, not too worried about the default value for arr.getColor,
+        // as that should also be provided in attr_defaults.
         mPaintStyle = new Paint();
-        int paintColor = arr.getColor(R.styleable.TouchyView_color, Color.rgb(255, 255, 255));
+        int paintColor = arr.getColor(R.styleable.TouchyView_color, -1);
         log(String.format("Paint color is ARGB=%d, %d, %d, %d",
                 Color.alpha(paintColor),
                 Color.red(paintColor),
@@ -67,10 +82,11 @@ public class TouchyView extends ViewGroup {
         mTextPaintStyle.setAntiAlias(true);
         mTextPaintStyle.setTextSize(mTextPaintStyle.getTextSize() * 3.0f);
         mTextPaintStyle.setTypeface(Typeface.SANS_SERIF);
-        paintColor = arr.getColor(R.styleable.TouchyView_textColor, Color.rgb(0, 0, 0));
+        
+        paintColor = arr.getColor(R.styleable.TouchyView_textColor, -1);
         mTextPaintStyle.setColor(paintColor);
         
-        // "Be sure to call (TypedArray).recycle() when you are done with the array."!
+        // "Be sure to call (TypedArray).recycle() when you are done with the array."
         arr.recycle();
     }
     
@@ -82,7 +98,7 @@ public class TouchyView extends ViewGroup {
      * Perform layout of children.
      * 
      * We allocate some space at the top for our text display, and to let our colours
-     * shine through. Then we give the rest of the space to our children Ð layering
+     * shine through. Then we give the rest of the space to our children Ñ layering
      * them directly on top of each other if we have more than one. Because we're
      * hardcore.
      */
