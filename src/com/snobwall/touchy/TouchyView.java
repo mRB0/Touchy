@@ -69,6 +69,9 @@ public class TouchyView extends ViewGroup {
         mTextPaintStyle.setTypeface(Typeface.SANS_SERIF);
         paintColor = arr.getColor(R.styleable.TouchyView_textColor, Color.rgb(0, 0, 0));
         mTextPaintStyle.setColor(paintColor);
+        
+        // "Be sure to call (TypedArray).recycle() when you are done with the array."!
+        arr.recycle();
     }
     
     public void log(String s) {
